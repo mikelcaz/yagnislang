@@ -22,3 +22,8 @@ namely Jai, Ada, C/C++, C#, Kotlin, Rust, Erlang... and more.
 I'll accept also feedback (in some degree), so don't be shy and comment!
 
 That's all for now. More news coming soon.
+
+---
+UPDATE — For the time being, I'll use Github issues:
+
+<https://github.com/mikelcaz/yagniscomments/issues/1>
