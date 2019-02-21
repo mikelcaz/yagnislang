@@ -3,6 +3,7 @@ layout: post
 title:  "Designing Yagnis"
 date:   2019-02-16 16:24:00 +0100
 categories: yagnis update
+permalink: /update/designing-yagnis
 ---
 Hello, World!
 

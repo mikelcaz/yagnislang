@@ -1,18 +1,19 @@
 ---
 layout: post
 title: "First bits"
-date: 2019-02-20 16:24:00 +0100
+date: 2019-02-21 18:09:00 +0100
 categories: yagnis update
+permalink: /update/first-bits
 ---
-Trying to design the syntax, I have come to undertand there are two laws that, to my mind, describe the process very well. You can think of them as Newton's Laws (but they are not the same, because Newton's Laws are just approximations of the reality). The first one is:
+Trying to design the syntax, I have come to understand there are two laws that, to my mind, describe the process very well. You can think of them as Newton's Laws (but they are not the same, because Newton's Laws are just approximations of the reality). The first one is:
 
 - I. The decision \#`x` you are going to take will haunt you at `x`+1 for all `x`.
 
 Sometimes happens that, after a lot of trial and error, and undoing things that do not fit, you discover you made a good decision (or at least one not too harmful). Thus, the first law has no impact anymore. Hence the second law:
 
-- II. If you found that the first law not longer applies, it is still applying, and the monster you have created has grown into such gigant mess you can't even reason how screwed you are.
+- II. If you found that the first law not longer applies, it is still applying, and the monster you have created has grown into such giant mess you can't even reason how screwed you are.
 
-At this point you are smiling, while your 'tiny' star at your back is reaching the critical mass and density to become into a black hole. Regrettably, it's just a methaphor: if it were a real black hole, it would suck its creator in after that.
+At this point you are smiling, while your 'tiny' star at your back is reaching the critical mass and density to become into a black hole. Regrettably, it's just a metaphor: if it were a real black hole, it would suck its creator in after that.
 
 It is also estimated this is the very process that every language goes through (except in those which are a giant mess from the beginning, like Java).
 
@@ -43,7 +44,7 @@ block:
     ...
 ```
 
-# Constant declaration/assignment (Sean Barret's syntax)
+# Constant declaration/assignment (Sean Barrett's syntax)
 
 ```
 name : type = value
@@ -75,15 +76,15 @@ I considered using `var` just before the value:
 name := var value
 ```
 
-But then would be inconsistent, and a pain switching between using type inference and the explicit type (omitting the type cleanly is one of the advantages of this syntax).
+But then would be inconsistent, and a pain switching between using type inference and the explicit type (omitting the type cleanly is one of the advantages of Barrett's syntax, as is in other languages). I know here the First Law is doing its thing, and I'll regret it in the near future...
 
 The reasons why I'm not using the exact Jai syntax is:
 
 1. Declaring constants should not be more difficult than variables. I don't mind the other way around.
 2. Some types are defined based on other types, with their own variability permissions.
-3. I prefer constant arguments in functions, but it would be great if it would be a default that could be overriden.
+3. I prefer constant arguments in functions, but it would be great if it would be a default that could be overridden.
 
-For `2`, Consider C++:
+For `2`, consider C++:
 
 ```
 int const * const ptr;
@@ -91,7 +92,7 @@ int const * const ptr;
 
 For `3`, consider that languages like Java, Kotlin or C# use objects always through _references_, and not the object value itself.
 
-In Kotlin, arguments (references) are constant, but the value can be mutable depending on the interface used. Yagnis can not be done like this.
+In Kotlin, arguments (references) are constant, but the value can be mutable depending on the interface used. Yagnis cannot be done like this.
 
 # Function declarations
 
@@ -116,7 +117,7 @@ Or being completely anonymous without changes:
 
 No `return` keyword here (almost everything should be an expression).
 
-For the people thinking this is inconsistent with the 'regular Sean's syntax', it could be surprising to found it is actually the same:
+For the people thinking this is inconsistent with the 'regular Sean's syntax', it could be surprising to found it is the same:
 
 ```
 square : (x: i64) -> i64 = (x: i64) -> i64 {x * x}
@@ -163,9 +164,9 @@ Nothing important, but there are many programmers that does not use block commen
 
 # Alignment considered harmful
 
-As I said in the part about the use of square brackets, I think both spaces and tabs don't do a very good job. But still, we need them. I won't start a crusade after deciding which one is the least worst option. It will be matter of each programmer's culture after all. I guess the compiler could emit a `warning` if you don't set which one will be used in the configuration file... Never mind.
+As I said in the part about the use of square brackets, I think both spaces and tabs don't do a very good job. But still, we need them. I won't start a crusade after deciding which one is the least bad option. It will be matter of each programmer's culture after all. I guess the compiler could emit a `warning` if you don't set which one will be used in the configuration file... Never mind.
 
-**But please**. Don't treat your code (in plain text) as a punched card.
+**But please**. Don't treat your code (or any other kind of _plain text_) as if it were punched in cards.
 
 ```
 foo       helloworld
@@ -179,16 +180,20 @@ foo🕳🕳🕳🕳🕳🕳🕳helloworld
 myowntype🕳goodbye
 ```
 
-Code is text, and nobody prevents the user from changing to proportional fonts. No one should be forced to that, it's a silly requirement. Please stop doing ASCII art.
+> Every space has been replaced with holes (U+1F573). It may have a different width. If you rely on monospaced fonts to align your code, you probably deserve it.
 
-And due to the way tabs work, they should not be used to align code either. So just don't align your code, nor rely on punching it in a card, because it won't work:
+Code is text, and nobody prevents the user from changing to proportional fonts. No one should be forced to use monospaced fonts, it's a silly requirement (and a few times unmaintainable). Please stop making ASCII art out of your code.
+
+Of course, as tabs relies on tabstops, they should not be used to align code either. So don't bother with aligning your code at all, nor write it in a punched card, because it won't work as you intend in your colleagues's computers.
+
+Apparently aligned code:
 
 ```
 int hello
 www world
 ```
 
-(Becomes):
+(Could become unexpectedly into):
 
 int hello  
 www world
@@ -196,7 +201,7 @@ www world
 > Note how you need a proportional font to see the difference.
 
 ---
-I'll stop here for now. Don't forget to tell what do you think about the topics discussed. More soon!
+I'll stop here for now. Feel free to comment what you think about the topics discussed. More soon!
 
-Comment at Github:  
-<https://github.com/mikelcaz/yagniscomments/issues/2>
+> Comment at Github:  
+> <https://github.com/mikelcaz/yagniscomments/issues/2>
