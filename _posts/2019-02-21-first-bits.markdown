@@ -67,7 +67,7 @@ name : var type
 name = value
 ```
 
-I'm not very fond of this, but the `var` keyword would be the **variability permission modifier**. Note how even whether the type of `value` has the variability permission, `value` loses it by default when used as lvalue. A single `var` can be used to override this behavior while using type inference.
+I'm not very fond of this, but the `var` keyword would be the **variability permission modifier**. Note how even whether the _type of the value_ has the variability permission, the _value itself_ loses it by default when used as rvalue. A single `var` can be used to override this behavior while still using type inference.
 
 I considered using `var` just before the value:
 
