@@ -123,7 +123,7 @@ For the people thinking this is inconsistent with the 'regular Sean's syntax', i
 square : (x: i64) -> i64 = (x: i64) -> i64 {x * x}
 ```
 
-The type must be present in the definition to declare the arguments. For now, the return type must be explicitly told. Most of the time, the type of the constant can be omitted, it will be inferred.
+The 'type' must be present in the definition to declare the arguments. For now, the **return type** must be explicitly told in the definition too. Most of the time, the **function type** of the constant can be omitted, as is redundant, and will be inferred instead. That's one of the points of using type inference after all.
 
 # Explicit end of statements
 
