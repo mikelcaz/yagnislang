@@ -76,7 +76,7 @@ I considered using `var` just before the value:
 name := var value
 ```
 
-But then would be inconsistent, and a pain switching between using type inference and the explicit type (omitting the type cleanly is one of the advantages of Barrett's syntax, as is in other languages). I know here the First Law is doing its thing, and I'll regret it in the near future...
+But then would be inconsistent, and a pain switching between using type inference and the explicit type (omitting the type cleanly is one of the advantages of Barrett's syntax, as is in other languages). I know the First Law is doing its thing here, and I'll regret it in the near future...
 
 The reasons why I'm not using the exact Jai syntax is:
 
