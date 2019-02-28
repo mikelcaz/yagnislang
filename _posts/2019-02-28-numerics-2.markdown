@@ -1,0 +1,310 @@
+---
+layout: post
+title:  "Numerics, part 2"
+date:   2019-02-28 17:48:00 +0100
+categories: yagnis update
+permalink: /update/numerics-2
+---
+# Numerics, part 2
+
+> This is a post draft. I'll replace it with a finished version soon, but Numerics, part 1 must be released first.
+
+## Fuzzily-sized integers everywhere
+
+> Disclaimer: I'm not by no means a Rust expert.
+
+Using C integer types (`short`, `int`, `long`...) to describe fields of `N` bits in data structures does not conveys the intention properly. Worse, as the efficiency of those types is up to the underlaying architecture, the language allows the implementations to use different sizes (to some degree). You know, 'here `int` has just 2 bytes, there has 4 of them'.
+
+Some solutions have been used in preexisting languages, from using preprocessor macros, to including new types (but they just mitigate the problem). Other "solution" is to fix the sizes in the languages from the very beginning and pretend those types are the C ones (this is not a solution at all, is turn the shortcoming in an unavoidable standard).
+
+It even seems that at least a well-known operating system (particularly Windows) has kept some of their sizes fixed in the transition from x86\_32 to 64 bits, because there are programs that rely on the previous ones. Besides, their sizes are not guaranteed (_Dare to change the compiler!_).
+
+In Rust, however, the situation is quite different. There, integer types are defined for signed and unsigned types, and from 8 to 128 bits.
+
+Rust integer types:
+
+| Unsigned | Signed |
+| ---: | ---: |
+| u8| i8 |
+| u16| i16 |
+| u32| i32 |
+| u64| i64 |
+| u128 | i128 |
+| usize | isize |
+
+There are no 'blurry' types at all... _Hold on there. What are usize/isize?_
+
+### Pointer-sized integers in Rust
+
+Languages with 'blurry' integer types provides their default integers (like `int`) with sizes intended to be fast in a per-architecture basis. In many arquitectures, the size of a pointer is the same of `int`, but it is not always the case.
+
+This is a real problem. Pointer-sized integers are used all over the place (in arrays, for instance), an many programmers assume they can 'just use `int`'. In no time, we are back to the original problem.
+
+This quote of Linus Torvalds can be read in some versions of the Linux man pages ([accept(_2_)](https://manpages.debian.org/jessie/manpages-dev/accept4.2.en.html)):
+
+> '_Any_ sane library _must_ have "socklen_t" be the same size as int. Anything else breaks any BSD socket layer stuff. POSIX initially did make it a size_t, and I (and hopefully others, but obviously not too many) complained to them very loudly indeed. Making it a size_t is completely broken, exactly because size_t very seldom is the same size as "int" on 64-bit architectures, for example. And it has to be the same size as "int" because that's what the BSD socket interface is. Anyway, the POSIX people eventually got a clue, and created "socklen_t". They shouldn't have touched it in the first place, but once they did they felt it had to have a named type for some unfathomable reason (probably somebody didn't like losing face over having done the original stupid thing, so they silently just renamed their blunder).'
+
+Putting aside the coolness of quoting a rant of Linus Torvalds in the manual, and get the point understood thanks to that, this kind of problem could be avoided if _size types_ weren't just a fancy `int`, and they were replaced with meaningful types (for you and _for the compiler_). And here, 'meaningful' is not just 'differentiated', but **usefully** differentiated.
+
+Let's say we want to use a function that recieves an `usize` value as an argument. We did many calculations, and we got a `u32`. What would we do in Rust?
+
+```
+fn foo() -> Result<(), usize>
+{
+    let input: u32;
+
+    // ...
+    // input = whatever;
+
+    bar(input) // ERROR: expected usize, found u32.
+}
+
+fn bar(v: usize) -> Result<(), usize>
+{
+    // ...
+    Ok(())
+}
+```
+
+Ouch. How do we solve the error?
+
+```
+    bar(input as usize)
+```
+
+But this is naive. The target architecture could use 8-bit or 16-bit pointers. Truncating a pointer does not sound appealing (nor does a pointer-size integer). Let's try again:
+
+```
+    if input <= std::usize::MAX {
+        bar(input as usize)
+    } else {
+        // Return the maximum allowed size.
+        Err(std::usize::MAX)
+    }
+```
+```
+    if input <= std::usize::MAX {
+                ^^^^^^^^^^^^^^^
+    ERROR: expected u32, found usize.
+```
+
+_Eh! Why?!_
+
+First, note there are architectures where `u32` is narrower than (or as wide as) `usize`, and thus, even when it is always `true`, the comparison has to be done. (_Is it? Well, the compiler should be able to optimize it out there. And **that** is precisely what we want._).
+
+The only problem is it does not work, obviously. The reason is those constants **are represented with the same type that are describing**. And I don't want implicit conversions like in C, mostly because of the unexpected consequences, but also because making the performance penalty explicit won't alleviate my guilty conscience (_take care of your baggage, sir_).
+
+At this point, it is important to notice that **we had explicitly told enough information to the compiler, and yet we are still fighting the type system**.
+
+Let's try something different:
+
+```
+#[cfg(any(
+    target_pointer_width = "32",
+    target_pointer_width = "64",
+))]
+fn foo() -> Result<(), usize> {
+    // ...
+
+    bar(input as usize)
+}
+
+#[cfg(target_pointer_width = "16")]
+fn foo() -> Result<(), usize> {
+    // ...
+
+    if (input as usize) <= std::usize::MAX {
+        bar(input as usize)
+    } else {
+        // Return the maximum allowed size.
+        Err(std::usize::MAX)
+    }
+}
+```
+
+A little bit of [conditional compilation](https://doc.rust-lang.org/rust-by-example/attribute/cfg.html). This approach has two shortcomings.
+
+The former is that we had to rewrite the whole function. Twice, so far. To bypass the type system. To do something that the compiler could be able to do better than us.
+
+But the latter is we had a little overlook. _What if the pointer size is of 8 bits?_ You may be thinking there is no problem, because we can add it:
+
+```
+#[cfg(any(
+    target_pointer_width = "8", // Fixed!
+    target_pointer_width = "16",
+))]
+fn foo() -> Result<(), usize> 
+// ...
+```
+
+But then, **what if the pointer size is of 10 bits, or 128 bits, or any other?**. It seems we can't do this:
+
+```
+#[cfg(target_pointer_width < "32")]
+```
+```
+// ERROR: `cfg` is not a well-formed meta-item.
+```
+
+While there are scenarios where using conditional compilation for every architecture is the way to go, you would have to add it even whether it is not the case. Cross-platform, anyone?
+
+So, the best way to tackle the problem that I have found until now is:
+
+```
+fn foo() -> Result<(), usize> {
+    // ...
+
+    if mem::size_of::<i32>() <= mem::size_of::<usize>()
+        || input <= (std::usize::MAX as u32)
+    {
+        bar(input as usize)
+    } else {
+        // Return the maximum allowed size.
+        Err(std::usize::MAX)
+    }
+}
+```
+
+It seems to me that this is misleading, lax, error prone, and daunting to read or write. But this is just an opinion, and YMMV.
+
+It also adds something that 'could' (this is just speculation) be an extra comparsion in some architectures. Sure, the compiler could optimize it, but you may want to check it in the documentation of Rust (or think hard about its semantics).
+
+I'm uneasy with this, I feel the solution should be effortlessly conveyed to the compiler, as long it be thorough and don't require mind reading, because all that we need is already available to the compiler.
+
+> The good news are that some TryFrom implementations for this type are coming. I think they will be in the 1.34 stable version, in April 2019.
+
+But still...
+
+### Pointer-sized integers in Yagnis, first attempt
+
+Accepting pointer-sized integers anywhere the current arquitecture make it convenient without even a `warning` is the root of all evil. Let's do it better.
+
+How about something akin to:
+
+```
+() -> () {
+    usize_max := `literal´
+    input : u32 = get_input()
+
+    if input < usize_max {
+        bar(input `safely as´ usize_max)
+    } else {
+        // handle ...
+    }
+}
+```
+
+Note _\`words between slanted quotes´_ are placeholders. For instance, Yagnis has no cast operator yet, so _\` safely as´_ are not real keywords, and would be replaced with whichever syntax is finally chosen.
+
+But what 'safely' means? It means (and most of the time is preferable) that the cast is type-safe, so it won't fail _and_ no data will be lost. You can't use it if the compiler can't guarantee you that, **but here it would work because of the comparison**.
+
+In suitable architectures, the comparison would be automatically, let's call it, 'optimized out' (but it is a misnomer, it shouldn't be regarded as an optimization). The actual check would be added otherwise.
+
+By the way. This is almost the same as the first safe attempt in Rust, which wasn't allowed due to the type mismatch. How would the computation be carried out?
+
+<!-- First, note how the `usize_max` constant is an `usize` (and remember I could use a **default integer** instead). But regardless of which one is picked, it would work. Why? -->
+
+First, note how the `usize_max` constant is an **[abstract integer literal](https://mikelcaz.github.io/yagnislang/update/numerics-1))**. The reason is that `usize` literals will be refused without a check like the previous one. Without that, some literals would be valid depending on the architecture, so they are just forbidden (without an explicit cast).
+
+This code would work thank to an invisible force. And yes, we hate that kind of forces (that reminds me a [black hole](https://mikelcaz.github.io/yagnislang/update/first-bits)), but the leitmotif of these post about numerals is **how inconsistent rules that are sometimes explicit and sometimes implicit are the real pain**.
+
+There are two kinds of constants (at least with this taxonomy). Those of the first kind are also **compile-time evaluable expressions**, and can be resolved... well, you get the idea.
+
+You can't explicitly 'mark' a constant to be suitable, the gist is the compiler knows it by context, providing _slightly_ different semantics.
+
+It still seems like a bad idea? Let's take a look again:
+
+```
+    usize_max := `literal´ // Compile-time constant.
+    input : u32 = get_input() // Run-time constant.
+```
+
+When a value must pass across a function (as an argument), or be returned, we need some memory to store the value. However, here `usize_max` is just a label. **I'm not trying to tell anything to the compiler, but it is meaningful for me and other human programmers**. The compiler does not care about names, which I use to don't have to remember values (nor modify every instance of them each time, let's say, I compile for another architecture).
+
+In case we need a more meaningful name in a certain context, **we can choose a new name anytime**:
+
+```
+    pointer_limit := usize_max
+```
+
+Actually, this semantic also applies to run-time constants and variables, but when a constant points to a `literal value`, this is pushed to the limit: we are binding a name or label to an _abstract value_ for convenience sake, instead of a value that was restricted because we want to fit it into a CPU register (or whatever).
+
+> "Compiler, is this **run-time computed constant** less than or equals to this **abstract integer**?"
+>
+>"Let me see, Dave."
+
+If the comparison can be carried out in a specific architecture, obviously, the value fits in the restricted type, so it is 'translated to assembly'. If it doesn't, it's fine, because **by the time this happens the compiler is able to remove the `if`/`else` altogether, and it will do it, at compile time**, but still we are forced to **state explicitly** what to do otherwise (making the source code portable and well defined), or to state that the code is not portable using some kind of conditional compilation like in Rust.
+
+Whether the abstract integer is the maximum value of u32 in a specific platform, that one will benefit from a free optimization (although both implementations are 'possible', only the second one is allowed): but it is just a nice side effect, the point of this rule is not optimization but portability (therefore is not optional, compilers must implement it).
+
+But wait. It gets better:
+
+```
+// (Somewhere, built-in).
+usize_max : usize;
+```
+```
+() -> () {
+    // Poof!
+    // usize_max := `literal´
+
+    input : u32 = get_input()
+
+    if input < usize_max {
+        bar(input `safely as´ usize_max)
+    } else {
+        // handle ...
+    }
+}
+```
+
+The abstract integer literal was replaced by an `usize` constant. Would it work? Yes, it would. The reason is that the constant still is a compile-time evaluated constant (is known in advance, not computed at run-time), so **will behave as abstract or 'restricted' depending on context**.
+
+More than restricted. It is qualified. As it was binded into a `usize` constant, we can do what was imposible with literals: we are allowed to bind it again without telling anything else.
+
+```
+    // Not allowed.
+    pointer_limit : usize = 1
+```
+```
+    // Allowed!
+    pointer_limit : /* usize */ = usize_max
+```
+
+But as long as we know its value at compile time, we can make the comparison and get away with it.
+
+#### Room for improvement
+
+Has the compiler keep the track of the `if`? I don't want a compiler that reads minds, and while this is not dangerous (you have to release the lock with the safe cast in order to shoot yourself in the foot, and even then, it is just safe!), it also would be tricky to implement. Plus, something explicit would better convey intention to other programmers.
+
+How about using some metaprogramming construction to allow conditional programming and this semantic at the same time?
+
+> This probably won't the syntax. Don't get mad.
+
+Type-safe cast semantic:
+
+```
+() -> () {
+    // ...
+
+    #if input < usize_max {
+        bar(input `safely as´ usize_max)
+    } else {
+        // handle ...
+    }
+}
+```
+
+Conditional compilation:
+
+```
+#if u32_max < usize_max {
+    () -> () {
+        // ...
+
+        bar(input `safely as´ usize_max)
+    }
+}
+```
+
+Fixed.
