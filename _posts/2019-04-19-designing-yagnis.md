@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Designing Yagnis"
-date:   2019-02-16 16:24:00 +0100
-categories: yagnis update
+title: "Designing Yagnis"
+date: 2019-04-19 10:40:00 +0100
+# categories:
 permalink: /update/designing-yagnis
 ---
 Hello, World!
@@ -20,11 +20,6 @@ to remember constantly 'it isn't gonna need this or that'.
 
 Other languages are serving as inspiration for me,
 namely Jai, Ada, C/C++, C#, Kotlin, Rust, Erlang... and more.
-I'll accept also feedback (in some degree), so don't be shy and comment!
 
-That's all for now. More news coming soon.
-
----
-UPDATE — For the time being, I'll use Github issues:
-
-<https://github.com/mikelcaz/yagniscomments/issues/1>
+Currently, I am revising/rewriting the posts in a more organized fashion,
+so this is Yagnis blog mark two. More news coming soon.
