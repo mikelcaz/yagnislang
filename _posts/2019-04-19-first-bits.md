@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "First bits"
-date: 2019-04-19 11:15:00 +0100
+date: 2019-04-19 09:15:00 +0000
 # categories:
 permalink: /update/first-bits
 ---

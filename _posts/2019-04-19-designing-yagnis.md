@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Designing Yagnis"
-date: 2019-04-19 10:40:00 +0100
+date: 2019-04-19 08:40:00 +0000
 # categories:
 permalink: /update/designing-yagnis
 ---
