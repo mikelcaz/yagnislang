@@ -3,7 +3,7 @@ layout: post
 title: "Designing Yagnis"
 date: 2019-04-19 08:40:00 +0000
 # categories:
-permalink: /update/designing-yagnis
+permalink: /designing-yagnis
 ---
 Hello, World!
 

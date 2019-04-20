@@ -3,7 +3,7 @@ layout: post
 title: "Why type inference is part of Yagnis"
 date: 2019-04-19 09:20:00 +0000
 # categories:
-permalink: /update/about-yagnis-type-inference
+permalink: /about-yagnis-type-inference
 ---
 
 _What problems Yagnis tries to resolve through type inference?_ 

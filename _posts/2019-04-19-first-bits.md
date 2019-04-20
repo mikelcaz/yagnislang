@@ -3,7 +3,7 @@ layout: post
 title: "First bits"
 date: 2019-04-19 09:15:00 +0000
 # categories:
-permalink: /update/first-bits
+permalink: /first-bits
 ---
 Trying to design the syntax, I have come to understand there are two laws that, to my mind, describe the process very well. You can think of them as Newton's Laws (but they are not the same, because Newton's Laws are just approximations of the reality). The first one is:
 
