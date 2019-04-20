@@ -1,9 +1,9 @@
 ---
 layout: post
 title: "First bits"
-date: 2019-02-21 18:09:00 +0100
-categories: yagnis update
-permalink: /update/first-bits
+date: 2019-04-19 09:15:00 +0000
+# categories:
+permalink: /first-bits
 ---
 Trying to design the syntax, I have come to understand there are two laws that, to my mind, describe the process very well. You can think of them as Newton's Laws (but they are not the same, because Newton's Laws are just approximations of the reality). The first one is:
 
@@ -21,11 +21,11 @@ This is exactly why every feature added and decision taken could be reverted. Ta
 
 Let's begin.
 
-# Square brackets for blocks
+## Square brackets for blocks
 
 Although I found interesting how Python uses the indentation level to mark the compiler where code blocks are, it seems to me that the indentation level itself is represented (and handled by most editors) inconveniently beyond repair.
 
-I'll probably talk about this in a later post, but in short, I'll keep those brackets for now:
+I have some ideas to overcome this problem, and I will probably talk about this in a later post, but in short, I'll keep those brackets for now:
 
 ```
 block {
@@ -44,7 +44,9 @@ block:
     ...
 ```
 
-# Constant declaration/assignment (Sean Barrett's syntax)
+## Constant declaration/assignment
+
+**Sean Barrett's syntax**:
 
 ```
 name : type = value
@@ -53,7 +55,13 @@ name : type = value
 name := value
 ```
 
-# Variable declaration/assignment
+Note how the colon (`:`) means some _name_ is **declared**, and leaves room to specify a _type_ at the same time.
+
+However, I believe this syntax won't last long, mainly because the colon couldn't be used in other places where is more needed (and [this could be a greater problem in the near future](#square-brackets-for-blocks)).
+
+Also, I am not satisfied with its unintuitive placement in diferent kinds of declarations.
+
+## Variable declaration/assignment
 
 ```
 name : var type = value
@@ -94,7 +102,7 @@ For `3`, consider that languages like Java, Kotlin or C# use objects always thro
 
 In Kotlin, arguments (references) are constant, but the value can be mutable depending on the interface used. Yagnis cannot be done like this.
 
-# Function declarations
+## Function declarations
 
 Mostly the same as in Jai, but a little bit more _Rust-y_.
 
@@ -125,7 +133,7 @@ square : (x: i64) -> i64 = (x: i64) -> i64 {x * x}
 
 The 'type' must be present in the definition to declare the arguments. For now, the **return type** must be explicitly told in the definition too. Most of the time, the **function type** of the constant can be omitted, as is redundant, and will be inferred instead. That's one of the points of using type inference after all.
 
-# Explicit end of statements
+## Explicit end of statements
 
 I'd rather avoid it at all, but we'll see:
 
@@ -143,7 +151,7 @@ I'd rather avoid it at all, but we'll see:
 
 More about this in a later post.
 
-# Nested block comments
+## Nested block comments
 
 Nothing important, but there are many programmers that does not use block comments because (forgive the redundancy) 'commenting them out' is a pain. I think it would be even more intuitive if block comments could be nested:
 
@@ -162,7 +170,7 @@ Nothing important, but there are many programmers that does not use block commen
 */
 ```
 
-# Alignment considered harmful
+## Alignment considered harmful
 
 As I said in the part about the use of square brackets, I think both spaces and tabs don't do a very good job. But still, we need them. I won't start a crusade after deciding which one is the least bad option. It will be matter of each programmer's culture after all. I guess the compiler could emit a `warning` if you don't set which one will be used in the configuration file... Never mind.
 
@@ -201,7 +209,4 @@ www world
 > Note how you need a proportional font to see the difference.
 
 ---
-I'll stop here for now. Feel free to comment what you think about the topics discussed. More soon!
-
-> Comment at Github:  
-> <https://github.com/mikelcaz/yagniscomments/issues/2>
+This is all for now!
