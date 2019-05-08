@@ -51,7 +51,7 @@ Considerations about `if-else`:
 
 Personally, I prefer to mark the end of `if-else` sequences rather than mark I want to extend it every time (I found the latter error-prone).
 
-## The 'when' expression
+## The 'when-else' expression
 
 ```
 when <condition> :
@@ -59,6 +59,8 @@ when <condition> :
 when <condition> :
     <branch>
 ...
+[ else :
+    <branch> ]
 end
 ```
 
