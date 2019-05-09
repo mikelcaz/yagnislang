@@ -237,7 +237,7 @@ Also, whereas there are formatters that prefer not going too far meddling with y
 
 Long story short: yes, text editors are guilty, but not because they need more language-aware features, but due to their naivety handling indentation. And plain text indentation is almost universal, even outside programming languages.
 
-It is a pity. People fights to choose between **spaces and tabs** to represent indentation, but in my honest opinion, the real game changer is to talk about **perception** and **behaviour**.
+It is a pity. People fight to choose between **spaces and tabs** to represent indentation, but in my honest opinion, the real game changer is to talk about **perception** and **behaviour**.
 
 ---
 Part II coming soon!
