@@ -22,9 +22,9 @@ block :
 
 Expressions and statements starting blocks use a colon character to separate it and to add some visual redundancy.
 
-## A `def` keyword
+## A `let` keyword
 
-The original syntax for defining identifiers...:
+The original syntax for declaring identifiers...:
 
 ```
 name : [ type ] = value
@@ -33,7 +33,7 @@ name : [ type ] = value
 ... would be replaced with this one:
 
 ```
-def name [ type ] = value
+let name [ type ] = value
 ```
 
 In other words, compare before and after:
@@ -41,10 +41,8 @@ In other words, compare before and after:
 ```yagnis
 a := 42
 
-def a = 42
+let a = 42
 ```
-
-Don't confuse it with Python's `def`, which is aimed to define functions.
 
 This also would make those [`for` loops](https://mikelcaz.github.io/yagnislang/loops-part-i) much more fun:
 
@@ -53,4 +51,7 @@ for each i8 in 0 <= .. < 256 :
     // each ...
 ```
 
-Note the paralelism between `def`+`=` and `for`+`in`.
+Note the paralelism between `let`+`=` and `for`+`in`.
+
+---
+Update: `def` replaced with `let`.

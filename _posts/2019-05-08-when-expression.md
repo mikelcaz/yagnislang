@@ -67,7 +67,7 @@ end
 A `if-else`-like example could go like this:
 
 ```yagnis
-def x =
+let x =
     when a < 42 :
         42
     else :
