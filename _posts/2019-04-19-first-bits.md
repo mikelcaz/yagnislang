@@ -21,7 +21,7 @@ This is exactly why every feature added and decision taken could be reverted. Ta
 
 Let's begin.
 
-## Square brackets for blocks
+## Curly brackets for blocks
 
 Although I found interesting how Python uses the indentation level to mark the compiler where code blocks are, it seems to me that the indentation level itself is represented (and handled by most editors) inconveniently beyond repair.
 
@@ -57,7 +57,7 @@ name := value
 
 Note how the colon (`:`) means some _name_ is **declared**, and leaves room to specify a _type_ at the same time.
 
-However, I believe this syntax won't last long, mainly because the colon couldn't be used in other places where is more needed (and [this could be a greater problem in the near future](#square-brackets-for-blocks)).
+However, I believe this syntax won't last long, mainly because the colon couldn't be used in other places where is more needed (and [this could be a greater problem in the near future](#curly-brackets-for-blocks)).
 
 Also, I am not satisfied with its unintuitive placement in diferent kinds of declarations.
 
@@ -172,7 +172,7 @@ Nothing important, but there are many programmers that does not use block commen
 
 ## Alignment considered harmful
 
-As I said in the part about the use of square brackets, I think both spaces and tabs don't do a very good job. But still, we need them. I won't start a crusade after deciding which one is the least bad option. It will be matter of each programmer's culture after all. I guess the compiler could emit a `warning` if you don't set which one will be used in the configuration file... Never mind.
+As I said in the part about the use of curly brackets, I think both spaces and tabs don't do a very good job. But still, we need them. I won't start a crusade after deciding which one is the least bad option. It will be matter of each programmer's culture after all. I guess the compiler could emit a `warning` if you don't set which one will be used in the configuration file... Never mind.
 
 **But please**. Don't treat your code (or any other kind of _plain text_) as if it were punched in cards.
 
@@ -210,3 +210,5 @@ www world
 
 ---
 This is all for now!
+
+Fixed: 'curly brackets' instead of 'square brackets'.

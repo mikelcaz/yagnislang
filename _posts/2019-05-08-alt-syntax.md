@@ -12,7 +12,7 @@ See the [original proposed syntax](https://mikelcaz.github.io/yagnislang/first-b
 
 ## Meaningful indentation, colon character repurposed
 
-Well, at least without the help of square brackets:
+Well, at least without the help of curly brackets:
 
 ```
 block :
@@ -54,4 +54,6 @@ for each i8 in 0 <= .. < 256 :
 Note the paralelism between `let`+`=` and `for`+`in`.
 
 ---
-Update: `def` replaced with `let`.
+Updates:
+- `def` replaced with `let`.
+- 'Curly brackets' instead of 'square brackets'.
