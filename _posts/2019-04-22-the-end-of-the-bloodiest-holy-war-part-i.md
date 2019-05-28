@@ -240,4 +240,4 @@ Long story short: yes, text editors are guilty, but not because they need more l
 It is a pity. People fight to choose between **spaces and tabs** to represent indentation, but in my honest opinion, the real game changer is to talk about **perception** and **behaviour**.
 
 ---
-Part II coming soon!
+[Continues on Part II](https://mikelcaz.github.io/yagnislang/holy-war-editor-part-ii).
