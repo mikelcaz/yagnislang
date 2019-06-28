@@ -209,7 +209,7 @@ This is easy to understand:
 if True:
     if True:
         print("Hello")
-            # Cut the next **or** the previous line!
+        # Cut the next **or** the previous line!
         print("World!")
 
 if True:
@@ -230,8 +230,6 @@ if True:
 ```
 
 Because we carried one extra level of indentation. What we actually expect is this:
-
-Without the exception, the result could be:
 
 ```python
 if True:
