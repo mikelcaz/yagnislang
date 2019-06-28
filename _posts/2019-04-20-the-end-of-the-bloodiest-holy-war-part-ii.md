@@ -142,7 +142,7 @@ The last question won't be really important (as I said, this is an utopic approa
 - Adding automatically a newline there if missing.
 - Moving the cursor automatically after the end of line before pasting (if needed).
 
-### Cancellation of nesting and blank lines
+### Cancellation of nesting
 
 ```python
 if True: # NL + ►
