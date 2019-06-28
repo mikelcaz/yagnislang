@@ -192,7 +192,7 @@ if True: # NL + ►
     print("World!") # ◄ + NL
 ```
 
-Note how OIL and CIL are not exactly one side by side (there is a blank line in between). This is because blank lines are also allowed, making the nested block as elastic as this rule 😉.
+Note how, in this example, OIL and CIL were not exactly side by side (there is a blank line in between). This is because blank lines are also allowed, making the nested block as elastic as this rule 😉.
 
 ### Cutting and pasting text inside a block
 
