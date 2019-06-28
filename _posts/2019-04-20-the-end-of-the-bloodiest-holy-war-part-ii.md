@@ -142,7 +142,7 @@ The last question won't be really important (as I said, this is an utopic approa
 - Adding automatically a newline there if missing.
 - Moving the cursor automatically after the end of line before pasting (if needed).
 
-### Nesting cancelling and blank lines
+### Cancellation of nesting and blank lines
 
 ```python
 if True: # NL + ►
@@ -153,7 +153,23 @@ if True: # NL + ►
     print("World!") # ◄ + NL
 ```
 
-If this is going to happen during a paste operation (`CIL` immediately followed by `OIL`), the editor must take care of removing both. This is necessary to not inadvertently break the expected behaviour:
+If this is going to happen during a paste operation (`CIL` immediately followed by `OIL`), the editor must take care of removing both. This is necessary to not inadvertently break the expected behaviour, like this:
+
+```python
+if True: # NL + ►
+    print("Hello!") # ◄ + NL
+
+# More code pasted.
+# Unexpectedly, now this code (and all that follows)
+# is out of the conditional block!
+print("?!?")
+
+# NL + ►
+    # Code pasted!
+    print("World!") # ◄ + NL
+```
+
+Once the cancellation is cancelled itself in the first example, the code _looks_ the same:
 
 ```python
 if True: # NL + ►
@@ -163,7 +179,20 @@ if True: # NL + ►
     print("World!") # ◄ + NL
 ```
 
-Note how this is not exactly the same case (there is a blank line in between). This is because blank lines are an exception here, making the nested block as elastic as this rule 😉.
+But then, the second piece of pasted code would behave as expected:
+
+```python
+if True: # NL + ►
+    print("Hello!")
+
+    # More code pasted.
+    print(":)")
+
+    # Code pasted!
+    print("World!") # ◄ + NL
+```
+
+Note how OIL and CIL are not exactly one side by side (there is a blank line in between). This is because blank lines are also allowed, making the nested block as elastic as this rule 😉.
 
 ### Cutting and pasting text inside a block
 
@@ -284,3 +313,6 @@ However, indentation can be manipulated through the indentation key (or through 
 ## To be continued
 
 In this part, I established some behaviours which could be the solution, but cannot actually be implemented. In the next part I'll debunk them... and present a working variant.
+
+---
+Update 1: added example of the issue with 'cancellation of nesting'.
